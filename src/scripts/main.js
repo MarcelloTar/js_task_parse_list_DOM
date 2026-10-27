@@ -5,26 +5,19 @@
 const ul = document.querySelector('ul');
 const lists = document.querySelectorAll('li');
 
-// console.log({...list[0].dataset});
-
 function sortList(list) {
-  const dataSort = getEmployees(list);
+  const items = [...list].sort((a, b) => {
+    const ASalary = conversionToANumber(a.dataset.salary);
+    const BSalary = conversionToANumber(b.dataset.salary);
 
-  return [...dataSort]
-    .sort((a, b) => {
-      return b.salary - a.salary;
-    })
-    .map((item) => {
-      return `
-        <li
-          data-position="${item.position}"
-          data-salary="$${item.salary.toLocaleString('en-US')}"
-          data-age="${item.age}"
-        >
-          ${item.name}
-        </li>
-      `;
-    });
+    return BSalary - ASalary;
+  });
+
+  ul.innerHTML = '';
+
+  items.forEach((item) => {
+    ul.append(item);
+  });
 }
 
 function getEmployees(list) {
@@ -37,8 +30,10 @@ function getEmployees(list) {
   });
 }
 
-ul.innerHTML = '';
+function conversionToANumber(number) {
+  return +number.slice(1).replaceAll(',', '');
+}
 
-sortList(lists).forEach((item) => {
-  ul.innerHTML += item;
-});
+getEmployees(lists);
+
+sortList(lists);
